@@ -1,5 +1,4 @@
-A simple, locally-saved reimplementation of Anki.
-
+# A simple, locally-saved reimplementation of Anki
 For several years I have been a heavy user of [Anki](https://apps.ankiweb.net) to help me remember what I study.
 
 However, sometimes I am unable to add information I would like - typically, information protected as intellectual property, which should not leave the originating network. This very simple Anki clone solves this problem by running locally on the machine.
