@@ -1,3 +1,4 @@
+import os
 import math
 import pandas as pd
 from datetime import datetime as dt
@@ -16,6 +17,8 @@ def load_data():
         return pd.DataFrame(columns=COLS)
 
 def save_data(df):
+    if not os.path.exists(BACKUP_FOLDER):
+        os.makedirs(BACKUP_FOLDER)
     backup = "{}/{}.csv".format(BACKUP_FOLDER, dt.now().strftime("%Y%m%d_%H%M%S"))
     df.to_csv(backup, index=False)
     df.to_csv(FILENAME, index=False)
