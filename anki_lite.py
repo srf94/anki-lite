@@ -9,11 +9,11 @@ COLS = ["q", "a", "last", "interval", "incorrect", "total"]
 REVIEW_FREQ = 2
 META_FILENAME = "{}/meta.csv".format(BACKUP_FOLDER)
 
-def init_data():
-    return pd.DataFrame(columns=COLS)
-
 def load_data():
-    return pd.read_csv(FILENAME)
+    try:
+        return pd.read_csv(FILENAME)
+    except:
+        return pd.DataFrame(columns=COLS)
 
 def save_data(df):
     backup = "{}/{}.csv".format(BACKUP_FOLDER, dt.now().strftime("%Y%m%d_%H%M%S"))
@@ -121,8 +121,7 @@ def review_question(r):
 
 def main():
     ts = dt.now()
-    df = init_data()
-    # df = load_data()
+    df = load_data()
     df = add_questions(df)
     df = review(df)
     save_data(df)
@@ -130,6 +129,4 @@ def main():
     save_meta(te - ts)
 
 main()
-
-
 
