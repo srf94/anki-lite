@@ -1,5 +1,6 @@
 import os
 import math
+import argparse
 import pandas as pd
 from datetime import datetime as dt
 from datetime import timedelta as td
@@ -45,11 +46,8 @@ def y_n_input():
 
 def add_questions(df):
     while True:
-        print("Add new question? (y/n)")
-        if not y_n_input():
-            return df
         df2 = add_question(df)
-        print("Happy with question? (y/n)")
+        print("Use this question / answer pair?? (y/n)")
         i = y_n_input()
         if i:
             print("Question added")
@@ -57,14 +55,18 @@ def add_questions(df):
         else:
             print("Question not added")
 
+        print("Add new question? (y/n)")
+        if not y_n_input():
+            return df
+
 def add_question(df):
-    print("Question:")
+    print("Add question:")
     q = input("")
-    print("Answer:")
+    print("Add answer:")
     a = input("")
     print
-    print("Question: " + q)
-    print("Answer: " + a)
+    print("Provided question: " + q)
+    print("Provided answer: " + a)
     df = df.append(pd.DataFrame([[q, a, dt.now(), 0, 0, 0]], columns=COLS))
     return df
 
@@ -109,10 +111,10 @@ def review(df):
     return pd.DataFrame.from_records(out) 
 
 def review_question(r):
-    print(r["q"])
+    print("Question: {}".format(r["q"]))
     i = input("...")
-    print(r["a"])
-    print("(enter=correct, other=wrong)")
+    print("Answer: {}".format(r["a"]))
+    print("(enter=correct, other character=wrong)")
     i = input("")
     r["last"] = dt.now()
     r["total"] += 1
@@ -122,14 +124,23 @@ def review_question(r):
         r["incorrect"] += 1
     return r
 
-def main():
+def main(args):
     ts = dt.now()
     df = load_data()
-    df = add_questions(df)
-    df = review(df)
+    if args.add:
+        df = add_questions(df)
+    if args.review:
+        df = review(df)
     save_data(df)
     te = dt.now()
     save_meta(te - ts)
 
-main()
+parser = argparse.ArgumentParser()
+parser.add_argument("-a", "--add", dest="add", action='store_const', const=True,
+                   help='sum the integers (default: find the max)')
+parser.add_argument("-r", "--review", dest="review", action='store_const', const=True,
+                   help='sum the integers (default: find the max)')
+args = parser.parse_args()
+
+main(args)
 
